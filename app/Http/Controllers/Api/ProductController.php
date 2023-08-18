@@ -41,6 +41,11 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, Product $product)
     {
+        if(auth()->user()->id != $product->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this product'
+            ], 401);
+        }
         $product->update($request->only(['name', 'description']));
 
         $product->inventory()->update($request->only(['price', 'quantity']));
@@ -53,6 +58,11 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if(auth()->user()->id != $product->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to delete this product'
+            ], 401);
+        }
         $product->inventory()->delete();
 
         $product->delete();
@@ -64,6 +74,11 @@ class ProductController extends Controller
 
     public function storeImage(Request $request, Product $product)
     {
+        if(auth()->user()->id != $product->user_id) {
+            return response()->json([
+                'message' => 'You are not authorized to upload image for this product'
+            ], 401);
+        }
         $request->validate([
             'image' => 'required|image|max:2048'
         ]);
