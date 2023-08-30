@@ -7,10 +7,16 @@ use App\Http\Requests\Products\ProductStoreRequest;
 use App\Http\Requests\Products\ProductUpdateRequest;
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    use HttpResponses;
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         $products = Product::with('inventory')->paginate();
@@ -18,27 +24,34 @@ class ProductController extends Controller
         return ProductsResource::collection($products);
     }
 
-    public function show(Product $product)
-    {
-        return new ProductsResource($product);
-    }
-
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(ProductStoreRequest $request)
     {
         $product = Product::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'user_id' => auth()->user()->id, 
+            'user_id' => auth()->user()->id,
         ]);
 
         $product->inventory()->create($request->only(['price', 'quantity']));
 
-        return response()->json([
-            'message' => 'Product created successfully',
-            'data' => new ProductsResource($product)
-        ], 201);
+        return $this->success(new ProductsResource($product), 'Product created successfully', 201);
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(Product $product)
+    {
+        return new ProductsResource($product);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(ProductUpdateRequest $request, Product $product)
     {
         $this->authorize('update', $product);
@@ -47,12 +60,12 @@ class ProductController extends Controller
 
         $product->inventory()->update($request->only(['price', 'quantity']));
 
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'data' => new ProductsResource($product)
-        ], 200);
+        return $this->success(new ProductsResource($product), 'Product updated successfully', 200);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Product $product)
     {
         $this->authorize('delete', $product);
@@ -61,24 +74,19 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return response()->json([
-            'message' => 'Product deleted successfully'
-        ], 200);
+        return $this->success([], 'Product deleted successfully', 200);
     }
 
     public function storeImage(Request $request, Product $product)
     {
         $this->authorize('update', $product);
-        
+
         $request->validate([
             'image' => 'required|image|max:2048'
         ]);
 
         $product->addMediaFromRequest('image')->toMediaCollection('images');
 
-        return response()->json([
-            'message' => 'Image uploaded successfully',
-            'data' => new ProductsResource($product)
-        ], 201);
+        return $this->success(new ProductsResource($product), 'Product updated successfully', 200);
     }
 }
