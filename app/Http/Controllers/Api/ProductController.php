@@ -76,17 +76,4 @@ class ProductController extends Controller
 
         return $this->success([], 'Product deleted successfully', 200);
     }
-
-    public function storeImage(Request $request, Product $product)
-    {
-        $this->authorize('update', $product);
-
-        $request->validate([
-            'image' => 'required|image|max:2048'
-        ]);
-
-        $product->addMediaFromRequest('image')->toMediaCollection('images');
-
-        return $this->success(new ProductsResource($product), 'Product updated successfully', 200);
-    }
 }
