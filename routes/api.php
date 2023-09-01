@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductImageController;
 use Illuminate\Http\Request;
@@ -29,4 +30,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
     Route::post('/products/{product}/image', [ProductImageController::class, 'store']);
+    Route::apiResource('categories', CategoryController::class);
 });
