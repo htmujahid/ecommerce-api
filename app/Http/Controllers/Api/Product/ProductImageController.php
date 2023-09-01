@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductsResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -24,6 +24,6 @@ class ProductImageController extends Controller
 
         $product->addMediaFromRequest('image')->toMediaCollection('images');
 
-        return $this->success(new ProductsResource($product), 'Product updated successfully', 200);
+        return $this->success(new ProductResource($product), 'Product updated successfully', 200);
     }
 }

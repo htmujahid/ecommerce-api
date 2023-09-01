@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
-use App\Http\Resources\ProductsResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class ProductController extends Controller
     {
         $products = Product::with('inventory')->paginate();
 
-        return ProductsResource::collection($products);
+        return ProductResource::collection($products);
     }
 
     /**
@@ -37,7 +37,7 @@ class ProductController extends Controller
 
         $product->inventory()->create($request->only(['price', 'quantity']));
 
-        return $this->success(new ProductsResource($product), 'Product created successfully', 201);
+        return $this->success(new ProductResource($product), 'Product created successfully', 201);
     }
 
     /**
@@ -45,7 +45,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return new ProductsResource($product);
+        return new ProductResource($product);
     }
 
 
@@ -60,7 +60,7 @@ class ProductController extends Controller
 
         $product->inventory()->update($request->only(['price', 'quantity']));
 
-        return $this->success(new ProductsResource($product), 'Product updated successfully', 200);
+        return $this->success(new ProductResource($product), 'Product updated successfully', 200);
     }
 
     /**
