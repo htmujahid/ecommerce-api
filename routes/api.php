@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Product\ProductImageController;
+use App\Http\Controllers\Api\Product\ProductStatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,5 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
     Route::post('/products/{product}/image', [ProductImageController::class, 'store']);
+    Route::put('/products/{product}/status', ProductStatusController::class);
     Route::apiResource('categories', CategoryController::class);
 });

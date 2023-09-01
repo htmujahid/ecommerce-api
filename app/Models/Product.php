@@ -13,6 +13,7 @@ class Product extends Model
     [
         'name',
         'description',
+        'status',
         'user_id'
     ];
 
