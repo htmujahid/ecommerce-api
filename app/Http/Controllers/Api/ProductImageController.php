@@ -19,7 +19,7 @@ class ProductImageController extends Controller
         $this->authorize('update', $product);
 
         $request->validate([
-            'image' => 'required|image|max:2048'
+            'image' => ['required', 'image', 'max:2048']
         ]);
 
         $product->addMediaFromRequest('image')->toMediaCollection('images');

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Products\ProductStoreRequest;
-use App\Http\Requests\Products\ProductUpdateRequest;
+use App\Http\Requests\Product\ProductStoreRequest;
+use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
 use App\Traits\HttpResponses;
