@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Category\CategoryController;
+use App\Http\Controllers\Api\Category\CategoryStatusController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Product\ProductImageController;
 use App\Http\Controllers\Api\Product\ProductStatusController;
@@ -25,6 +26,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 // products endpoints
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::put('/categories/{category}/status', CategoryStatusController::class);
 // authenticated routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
