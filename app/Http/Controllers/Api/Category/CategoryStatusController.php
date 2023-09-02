@@ -16,6 +16,8 @@ class CategoryStatusController extends Controller
      */
     public function __invoke(Request $request, Category $category)
     {        
+        $this->authorize('update', $category);
+
         $request->validate([
             'status' => ['required', 'boolean'],
         ]);

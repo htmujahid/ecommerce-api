@@ -27,6 +27,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::put('/categories/{category}/status', CategoryStatusController::class);
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{category}', [CategoryController::class, 'show']);
 // authenticated routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
@@ -34,5 +36,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
     Route::post('/products/{product}/image', [ProductImageController::class, 'store']);
     Route::put('/products/{product}/status', ProductStatusController::class);
-    Route::apiResource('categories', CategoryController::class);
+    
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
 });

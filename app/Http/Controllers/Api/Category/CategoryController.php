@@ -46,6 +46,8 @@ class CategoryController extends Controller
      */
     public function update(CategoryUpdateRequest $request, Category $category)
     {
+        $this->authorize('update', $category);
+
         $category->update($request->validated());
 
         return $this->success(new CategoryResource($category), 'Category updated successfully', 200);
@@ -56,6 +58,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $this->authorize('update', $category);
+
         $category->delete();
 
         return $this->success(null, 'Category deleted successfully', 204);
