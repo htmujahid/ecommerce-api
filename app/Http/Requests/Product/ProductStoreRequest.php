@@ -26,6 +26,7 @@ class ProductStoreRequest extends FormRequest
             'description' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'quantity' => ['required', 'numeric', 'min:0'],
+            'categories' => ['required', 'array', 'exists:categories,id'],
         ];
     }
 }

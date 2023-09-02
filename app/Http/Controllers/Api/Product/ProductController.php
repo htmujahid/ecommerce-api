@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('inventory')->paginate();
+        $products = Product::with('inventory', 'categories')->paginate();
 
         return ProductResource::collection($products);
     }
@@ -36,6 +36,8 @@ class ProductController extends Controller
         ]);
 
         $product->inventory()->create($request->only(['price', 'quantity']));
+
+        $product->categories()->attach($request->input('categories'));
 
         return $this->success(new ProductResource($product), 'Product created successfully', 201);
     }

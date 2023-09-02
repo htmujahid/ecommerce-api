@@ -21,4 +21,9 @@ class Product extends Model
     {
         return $this->hasOne(Inventory::class);
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }
