@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Traits\HttpResponses;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class RegisteredUserController extends Controller
+class TokenRegisterController extends Controller
 {
+    use HttpResponses;
     /**
      * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(RegisterRequest $request): Response
+    public function __invoke(RegisterRequest $request)
     {
         $user = User::create([
             'name' => $request->name,
@@ -28,8 +26,11 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        $device = substr($request->userAgent() ?? '', 0, 255);
 
-        return response()->noContent();
+        return $this->success([
+            'token' => $user->createToken($device)->plainTextToken,
+            'user' => $user,
+        ], 'User registered successfully.');
     }
 }
