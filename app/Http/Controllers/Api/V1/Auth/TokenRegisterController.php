@@ -24,6 +24,8 @@ class TokenRegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->assignRole('customer');
+
         event(new Registered($user));
 
         $device = substr($request->userAgent() ?? '', 0, 255);
