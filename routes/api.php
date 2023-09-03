@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\Category\CategoryController;
-use App\Http\Controllers\Api\Category\CategoryProductController;
-use App\Http\Controllers\Api\Category\CategoryStatusController;
-use App\Http\Controllers\Api\Product\ProductController;
-use App\Http\Controllers\Api\Product\ProductImageController;
-use App\Http\Controllers\Api\Product\ProductStatusController;
-use App\Http\Controllers\Auth\TokenLoginController;
-use App\Http\Controllers\Auth\TokenLogoutController;
-use App\Http\Controllers\Auth\TokenRegisterController;
+use App\Http\Controllers\Api\V1\Auth\TokenLoginController;
+use App\Http\Controllers\Api\V1\Auth\TokenLogoutController;
+use App\Http\Controllers\Api\V1\Auth\TokenRegisterController;
+use App\Http\Controllers\Api\V1\Category\CategoryController;
+use App\Http\Controllers\Api\V1\Category\CategoryProductController;
+use App\Http\Controllers\Api\V1\Category\CategoryStatusController;
+use App\Http\Controllers\Api\V1\Product\ProductController;
+use App\Http\Controllers\Api\V1\Product\ProductImageController;
+use App\Http\Controllers\Api\V1\Product\ProductStatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
