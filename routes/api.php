@@ -30,7 +30,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 Route::post('/register', TokenRegisterController::class)->middleware('guest');
 Route::post('/login', TokenLoginController::class)->middleware('guest');
-Route::post('/logout', TokenLogoutController::class)->middleware('auth:sanctum');
 
 // products endpoints
 Route::get('/products', [ProductController::class, 'index']);
@@ -57,4 +56,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update']);
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
     Route::put('/categories/{category}/status', CategoryStatusController::class);
+
+    Route::post('/logout', TokenLogoutController::class)->middleware('auth:sanctum');
 });
