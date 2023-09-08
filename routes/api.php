@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\Category\CategoryStatusController;
 use App\Http\Controllers\Api\V1\Product\ProductController;
 use App\Http\Controllers\Api\V1\Product\ProductImageController;
 use App\Http\Controllers\Api\V1\Product\ProductStatusController;
+use App\Http\Controllers\Api\V1\Product\ProductVariationController;
+use App\Http\Controllers\Api\V1\Product\ProductVariationStockController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,11 +41,17 @@ Route::get('/categories/{category:slug}/products', CategoryProductController::cl
 // authenticated routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
+
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
     Route::post('/products/{product}/image', [ProductImageController::class, 'store']);
     Route::put('/products/{product}/status', ProductStatusController::class);
+
+    Route::post('/products/{product}/variations', [ProductVariationController::class, 'store']);
+    Route::put('/products/{product}/variations/{variation}', [ProductVariationController::class, 'update']);
+    Route::delete('/products/{product}/variations/{variation}', [ProductVariationController::class, 'destroy']);
+    Route::put('/products/{product}/variations/{variation}/stock', [ProductVariationStockController::class, 'update']);
     
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::put('/categories/{category}', [CategoryController::class, 'update']);

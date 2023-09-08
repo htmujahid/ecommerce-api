@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('inventory', 'categories')->paginate();
+        $products = Product::with('variations', 'categories')->paginate();
 
         return ProductResource::collection($products);
     }
@@ -35,8 +35,6 @@ class ProductController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        $product->inventory()->create($request->only(['price', 'quantity']));
-
         $product->categories()->attach($request->input('categories'));
 
         return $this->success(new ProductResource($product), 'Product created successfully', 201);
@@ -47,7 +45,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return new ProductResource($product);
+        return new ProductResource($product->load('variations'));
     }
 
 
@@ -60,8 +58,6 @@ class ProductController extends Controller
 
         $product->update($request->only(['name', 'description']));
 
-        $product->inventory()->update($request->only(['price', 'quantity']));
-
         return $this->success(new ProductResource($product), 'Product updated successfully', 200);
     }
 
@@ -72,7 +68,7 @@ class ProductController extends Controller
     {
         $this->authorize('delete', $product);
 
-        $product->inventory()->delete();
+        $product->variations()->delete();
 
         $product->delete();
 
