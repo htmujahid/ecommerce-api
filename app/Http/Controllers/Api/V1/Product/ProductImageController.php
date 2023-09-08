@@ -22,8 +22,8 @@ class ProductImageController extends Controller
             'image' => ['required', 'image', 'max:2048']
         ]);
 
-        $product->addMediaFromRequest('image')->toMediaCollection('images');
+        $request->image->store('public/images');
 
-        return $this->success(new ProductResource($product), 'Product updated successfully', 200);
+        return $this->success(new ProductResource($product), 'Product image updated successfully', 200);
     }
 }
