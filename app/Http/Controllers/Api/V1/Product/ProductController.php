@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('variations', 'categories')->paginate();
+        $products = auth()->user()->products()->with('variations', 'categories')->paginate();
 
         return ProductResource::collection($products);
     }
