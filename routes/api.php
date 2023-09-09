@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Auth\TokenRegisterController;
 use App\Http\Controllers\Api\V1\Category\CategoryController;
 use App\Http\Controllers\Api\V1\Category\CategoryProductController;
 use App\Http\Controllers\Api\V1\Category\CategoryStatusController;
+use App\Http\Controllers\Api\V1\Order\CartController;
 use App\Http\Controllers\Api\V1\Product\ProductController;
 use App\Http\Controllers\Api\V1\Product\ProductImageController;
 use App\Http\Controllers\Api\V1\Product\ProductStatusController;
@@ -56,6 +57,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update']);
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
     Route::put('/categories/{category}/status', CategoryStatusController::class);
+
+    Route::apiResource('carts', CartController::class);
 
     Route::post('/logout', TokenLogoutController::class)->middleware('auth:sanctum');
 });
