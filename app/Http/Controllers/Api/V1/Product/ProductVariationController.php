@@ -62,7 +62,7 @@ class ProductVariationController extends Controller
     public function destroy(Product $product, Variation $variation)
     {
         $this->authorize('delete', $product);
-        
+
         $variation->stock->delete();
         
         $variation->delete();

@@ -18,7 +18,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $carts = auth()->user()->carts()->with('variations')->get();
+        $carts = auth()->user()->cart()->with('variations')->get();
 
         return CartResource::collection($carts);
     }
@@ -28,7 +28,7 @@ class CartController extends Controller
      */
     public function store(CartStoreRequest $request)
     {
-        $cart = auth()->user()->carts()->firstOrCreate(
+        $cart = auth()->user()->cart()->firstOrCreate(
             ['user_id' => auth()->id()]
         );
 

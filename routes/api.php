@@ -32,19 +32,13 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::post('/register', TokenRegisterController::class)->middleware('guest');
 Route::post('/login', TokenLoginController::class)->middleware('guest');
 
-// products endpoints
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{product}', [ProductController::class, 'show']);
-
 Route::get('/categories/{category}', [CategoryController::class, 'show']);
 Route::get('/categories/{category:slug}/products', CategoryProductController::class);
 // authenticated routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
 
-    Route::post('/products', [ProductController::class, 'store']);
-    Route::put('/products/{product}', [ProductController::class, 'update']);
-    Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+    Route::apiResource('products', ProductController::class);
     Route::post('/products/{product}/image', [ProductImageController::class, 'store']);
     Route::put('/products/{product}/status', ProductStatusController::class);
 
