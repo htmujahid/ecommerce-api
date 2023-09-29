@@ -2,33 +2,43 @@
 
 namespace App\Models;
 
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
     use HasFactory;
-
-    protected $fillable =
-    [
-        'name',
-        'description',
-        'status',
-        'user_id'
+    use InteractsWithMedia;
+    
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'featured' => 'boolean',
+        'is_visible' => 'boolean',
+        'backorder' => 'boolean',
+        'requires_shipping' => 'boolean',
+        'published_at' => 'date',
     ];
 
-    public function inventory()
+    public function brand(): BelongsTo
     {
-        return $this->hasOne(Inventory::class);
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id')->withTimestamps();
     }
 
-    public function variations()
+    public function comments(): MorphMany
     {
-        return $this->hasMany(Variation::class);
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }
