@@ -27,6 +27,7 @@ return new class() extends Migration
             $table->boolean('is_visible')->default(false);
             $table->boolean('is_customizable')->default(false);
             $table->string('customization_link')->nullable();
+            $table->foreignId('seller_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('old_price', 10, 2)->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('cost', 10, 2)->nullable();

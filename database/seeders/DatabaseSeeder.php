@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Seller;
 use App\Models\User;
 use Closure;
 use Filament\Notifications\Actions\Action;
@@ -53,6 +54,12 @@ class DatabaseSeeder extends Seeder
             )->create());
         $this->command->info('Shop categories created.');
 
+        $this->command->warn(PHP_EOL . 'Creating shop sellers...');
+        $sellers = $this->withProgressBar(10, fn () => Seller::factory(1)
+            ->has(Address::factory()->count(rand(1, 3)))
+            ->create());
+        $this->command->info('Shop sellers created.');
+
         $this->command->warn(PHP_EOL . 'Creating shop customers...');
         $customers = $this->withProgressBar(1000, fn () => Customer::factory(1)
             ->has(Address::factory()->count(rand(1, 3)))
@@ -62,6 +69,7 @@ class DatabaseSeeder extends Seeder
         $this->command->warn(PHP_EOL . 'Creating shop products...');
         $products = $this->withProgressBar(50, fn () => Product::factory(1)
             ->sequence(fn ($sequence) => ['brand_id' => $brands->random(1)->first()->id])
+            ->sequence(fn ($sequence) => ['seller_id' => $sellers->random(1)->first()->id])
             ->hasAttached($categories->random(rand(3, 6)), ['created_at' => now(), 'updated_at' => now()])
             ->has(
                 Comment::factory()->count(rand(10, 20))
