@@ -21,6 +21,7 @@ return new class() extends Migration
             $table->longText('description')->nullable();
             $table->unsignedSmallInteger('position')->default(0);
             $table->boolean('is_visible')->default(false);
+            $table->boolean('featured')->default(false);
             $table->string('seo_title', 60)->nullable();
             $table->string('seo_description', 160)->nullable();
             $table->timestamps();

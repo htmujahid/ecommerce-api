@@ -10,6 +10,14 @@ class OrderAddress extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'street',
+        'city',
+        'country',
+        'state',
+        'zip',
+    ];
+
     public function addressable(): MorphTo
     {
         return $this->morphTo();

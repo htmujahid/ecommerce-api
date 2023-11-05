@@ -30,12 +30,12 @@ class DatabaseSeeder extends Seeder
     {
         // Clear images
         Storage::deleteDirectory('public');
-
+        /*        
         // Admin
         $this->command->warn(PHP_EOL . 'Creating admin user...');
         $user = $this->withProgressBar(1, fn () => User::factory(1)->create([
-            'name' => 'Demo User',
-            'email' => 'admin@ecommerce.com',
+            'name' => 'Funncart',
+            'email' => 'store.funncart@gmail.com',
         ]));
         $this->command->info('Admin user created.');
 
@@ -101,7 +101,7 @@ class DatabaseSeeder extends Seeder
                 ->sendToDatabase($user);
         }
         $this->command->info('Shop orders created.');
-
+        */
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection

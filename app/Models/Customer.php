@@ -16,6 +16,12 @@ class Customer extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+    ];
+
     /**
      * @var array<string, string>
      */

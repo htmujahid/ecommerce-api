@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -15,6 +16,8 @@ class Product extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+
+    protected $guarded = ['cost'];
     
     /**
      * @var array<string, string>
@@ -26,6 +29,18 @@ class Product extends Model implements HasMedia
         'requires_shipping' => 'boolean',
         'published_at' => 'date',
     ];
+
+    public function scopeFilter($query, $request)
+    {
+        if ($request->has('featured') && $request->featured == 'true') {
+            return $query->where('featured', true);
+        }
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
+    }
 
     public function brand(): BelongsTo
     {
@@ -40,5 +55,10 @@ class Product extends Model implements HasMedia
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function productVariants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 }

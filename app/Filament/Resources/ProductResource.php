@@ -11,6 +11,7 @@ use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,6 +26,8 @@ class ProductResource extends Resource
     protected static ?string $slug = 'products';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $navigationGroup = 'Shop';
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
@@ -56,22 +59,38 @@ class ProductResource extends Resource
                                     ->dehydrated()
                                     ->required()
                                     ->unique(Product::class, 'slug', ignoreRecord: true),
+                                
+                                Forms\Components\Select::make('seller')
+                                    ->relationship('seller', 'name')
+                                    ->required(),
+
+                                Forms\Components\Toggle::make('featured')
+                                    ->label('Featured')
+                                    ->helperText('This is a featured product')
+                                    ->default(false)
+                                    ->columnSpan('full'),
 
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full'),
+
+                                Forms\Components\MarkdownEditor::make('feature')
+                                    ->columnSpan('full'),
                             ])
                             ->columns(2),
-
-                        Forms\Components\Section::make('Images')
+                        
+                        
+                        Forms\Components\Section::make('Cover Image')
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('media')
                                     ->collection('product-images')
                                     ->multiple()
+                                    ->required()
                                     ->maxFiles(5)
                                     ->disableLabel(),
                             ])
                             ->collapsible(),
-
+                        
+                        /*
                         Forms\Components\Section::make('Pricing')
                             ->schema([
                                 Forms\Components\TextInput::make('price')
@@ -93,6 +112,8 @@ class ProductResource extends Resource
                                     ->required(),
                             ])
                             ->columns(2),
+                        */
+                        /*
                         Forms\Components\Section::make('Inventory')
                             ->schema([
                                 Forms\Components\TextInput::make('sku')
@@ -116,7 +137,8 @@ class ProductResource extends Resource
                                     ->required(),
                             ])
                             ->columns(2),
-
+                        */
+                        /*
                         Forms\Components\Section::make('Shipping')
                             ->schema([
                                 Forms\Components\Checkbox::make('backorder')
@@ -126,6 +148,7 @@ class ProductResource extends Resource
                                     ->label('This product will be shipped'),
                             ])
                             ->columns(2),
+                        */
                     ])
                     ->columnSpan(['lg' => 2]),
 
@@ -148,8 +171,7 @@ class ProductResource extends Resource
                             ->schema([
                                 Forms\Components\Toggle::make('is_customizable')
                                     ->label('Customizable')
-                                    ->helperText('This product can be customized.')
-                                    ->default(true),
+                                    ->default(false),
 
                                 Forms\Components\TextInput::make('customization_link')
                                     ->label('Customization Link')
@@ -187,7 +209,7 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('brand.name')
+                Tables\Columns\TextColumn::make('categories.name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -198,28 +220,42 @@ class ProductResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
+                Tables\Columns\IconColumn::make('featured')
+                    ->label('Featured')
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(),
+
+                /*
                 Tables\Columns\TextColumn::make('price')
                     ->label('Price')
                     ->searchable()
                     ->sortable(),
+                */
 
+                /*
                 Tables\Columns\TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                */
 
-                Tables\Columns\TextColumn::make('qty')
+                /*
+                Tables\Columns\TextColumn::make('product')
                     ->label('Quantity')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                */
 
+                /*
                 Tables\Columns\TextColumn::make('security_stock')
                     ->searchable()
                     ->sortable()
                     ->toggleable()
                     ->toggledHiddenByDefault(),
+                */
 
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('Publish Date')
@@ -228,6 +264,7 @@ class ProductResource extends Resource
                     ->toggleable()
                     ->toggledHiddenByDefault(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('brand')
                     ->relationship('brand', 'name')
@@ -259,6 +296,7 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\ProductVariantsRelationManager::class,
             RelationManagers\CommentsRelationManager::class,
         ];
     }

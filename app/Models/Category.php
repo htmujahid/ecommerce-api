@@ -15,12 +15,29 @@ class Category extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
+    protected $fillable = [
+        'parent_id',
+        'name',
+        'slug',
+        'description',
+        'is_visible',
+        'featured',
+        'position',
+    ];
+
     /**
      * @var array<string, string>
      */
     protected $casts = [
         'is_visible' => 'boolean',
     ];
+    
+    public function scopeFilter($query, $request)
+    {
+        if ($request->has('featured') && $request->featured == 'true') {
+            return $query->where('featured', true);
+        }
+    }
 
     public function children(): HasMany
     {

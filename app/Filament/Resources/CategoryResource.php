@@ -23,6 +23,8 @@ class CategoryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationGroup = 'Shop';
+
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     protected static ?int $navigationSort = 3;
@@ -65,6 +67,10 @@ class CategoryResource extends Resource
                             ->label('Visible to customers.')
                             ->default(true),
 
+                        Forms\Components\Toggle::make('featured')
+                            ->label('Featured')
+                            ->default(false),
+
                         Forms\Components\MarkdownEditor::make('description')
                             ->label('Description'),
                     ])
@@ -87,8 +93,7 @@ class CategoryResource extends Resource
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('media')
                             ->collection('category-images')
-                            ->multiple()
-                            ->maxFiles(5)
+                            ->required()
                             ->disableLabel(),
                     ])
                     ->columnSpan(['lg' => fn (?Category $record) => $record === null ? 3 : 2]),
@@ -112,11 +117,12 @@ class CategoryResource extends Resource
                     ->label('Parent')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('position')
-                    ->label('Position')
-                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_visible')
                     ->label('Visibility')
+                    ->boolean()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('featured')
+                    ->label('Featured')
                     ->boolean()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
@@ -141,12 +147,12 @@ class CategoryResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            RelationManagers\ProductsRelationManager::class,
-        ];
-    }
+    // public static function getRelations(): array
+    // {
+    //     return [
+    //         RelationManagers\ProductsRelationManager::class,
+    //     ];
+    // }
 
     public static function getPages(): array
     {

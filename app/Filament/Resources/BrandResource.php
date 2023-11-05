@@ -19,6 +19,8 @@ class BrandResource extends Resource
 
     protected static ?string $slug = 'brands';
 
+    protected static ?string $navigationGroup = 'Shop';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';

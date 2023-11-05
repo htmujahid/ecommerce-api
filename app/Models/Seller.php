@@ -20,6 +20,15 @@ class Seller extends Model implements HasMedia
     use SoftDeletes;
     use InteractsWithMedia;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'gender',
+        'birthday',
+        'featured'
+    ];
+
     /**
      * @var array<string, string>
      */
@@ -27,6 +36,13 @@ class Seller extends Model implements HasMedia
         'birthday' => 'date',
     ];
 
+    public function scopeFilter($query, $request)
+    {
+        if ($request->has('featured') && $request->featured == 'true') {
+            return $query->where('featured', true);
+        }
+    }
+    
     public function addresses(): MorphToMany
     {
         return $this->morphToMany(Address::class, 'addressable');
@@ -42,8 +58,8 @@ class Seller extends Model implements HasMedia
         return $this->hasManyThrough(Payment::class, Order::class, 'seller_id');
     }
 
-    public function seller(): HasOne
+    public function products(): HasMany
     {
-        return $this->hasOne(Seller::class);
+        return $this->hasMany(Product::class);
     }
 }

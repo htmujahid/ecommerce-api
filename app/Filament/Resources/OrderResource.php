@@ -8,6 +8,7 @@ use App\Filament\Resources\OrderResource\Widgets\OrderStats;
 use App\Forms\Components\AddressForm;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -27,6 +28,8 @@ class OrderResource extends Resource
     protected static ?string $slug = 'orders';
 
     protected static ?string $recordTitleAttribute = 'number';
+
+    protected static ?string $navigationGroup = 'Shop';
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
@@ -80,11 +83,6 @@ class OrderResource extends Resource
                         'warning' => 'processing',
                         'success' => fn ($state) => in_array($state, ['delivered', 'shipped']),
                     ]),
-                Tables\Columns\TextColumn::make('currency')
-                    ->getStateUsing(fn ($record): ?string => Currency::find($record->currency)?->name ?? null)
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 Tables\Columns\TextColumn::make('total_price')
                     ->searchable()
                     ->sortable()
@@ -156,7 +154,8 @@ class OrderResource extends Resource
                     ->label('Order Date')
                     ->date()
                     ->collapsible(),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -247,6 +246,28 @@ class OrderResource extends Resource
                             ->columnSpan([
                                 'md' => 3,
                             ]),
+
+                        Forms\Components\Select::make('variant_id')
+                            ->label('Product Variant Title')
+                            ->options(ProductVariant::query()->pluck('title', 'id'))
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('unit_price', Product::find($state)?->price ?? 0))
+                            ->columnSpan([
+                                'md' => 5,
+                            ])
+                            ->searchable(),
+
+                        Forms\Components\Select::make('variant_id')
+                            ->label('Product Variant Type')
+                            ->options(ProductVariant::query()->pluck('type', 'id'))
+                            ->reactive()
+                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('unit_price', Product::find($state)?->price ?? 0))
+                            ->columnSpan([
+                                'md' => 5,
+                            ])
+                            ->searchable(),
+
                     ])
                     ->orderable()
                     ->defaultItems(1)

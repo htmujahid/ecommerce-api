@@ -16,8 +16,4 @@ use App\Livewire\Form;
 
 \Illuminate\Support\Facades\Route::get('form', Form::class);
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
-});
-
-// require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';

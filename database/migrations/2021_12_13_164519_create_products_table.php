@@ -21,6 +21,7 @@ return new class() extends Migration
             $table->string('sku')->unique()->nullable();
             $table->string('barcode')->unique()->nullable();
             $table->longText('description')->nullable();
+            $table->longText('feature')->nullable();
             $table->unsignedBigInteger('qty')->default(0);
             $table->unsignedBigInteger('security_stock')->default(0);
             $table->boolean('featured')->default(false);

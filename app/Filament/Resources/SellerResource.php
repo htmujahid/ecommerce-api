@@ -24,6 +24,8 @@ class SellerResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationGroup = 'Shop';
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?int $navigationSort = 1;
@@ -49,20 +51,15 @@ class SellerResource extends Resource
 
                         Forms\Components\DatePicker::make('birthday')
                             ->maxDate('today'),
+
+                        Forms\Components\Toggle::make('featured')
+                            ->label('Featured')
+                            ->helperText('This is a featured product')
+                            ->default(false),
                     ])
                     ->columns(2)
                     ->columnSpan(['lg' => fn (?Seller $record) => $record === null ? 3 : 2]),
                 
-                Forms\Components\Section::make('Images')
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('media')
-                            ->collection('seller-images')
-                            ->multiple()
-                            ->maxFiles(5)
-                            ->disableLabel(),
-                    ])
-                    ->collapsible(),  
-
                 Forms\Components\Section::make()
                     ->schema([
                         Forms\Components\Placeholder::make('created_at')
@@ -75,6 +72,23 @@ class SellerResource extends Resource
                     ])
                     ->columnSpan(['lg' => 1])
                     ->hidden(fn (?Seller $record) => $record === null),
+                    
+                Forms\Components\Section::make('Display picture')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('media')
+                            ->collection('seller-images')
+                            ->disableLabel(),
+                    ])
+                    ->collapsible(),  
+
+                Forms\Components\Section::make('Cover picture')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('media')
+                            ->collection('seller-images')
+                            ->disableLabel(),
+                    ])
+                    ->collapsible(),  
+
             ])
             ->columns(3);
     }
@@ -84,16 +98,19 @@ class SellerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('seller-image')
-                ->label('Image')
-                ->collection('seller-images'),
+                    ->label('Image')
+                    ->collection('seller-images'),
 
                 Tables\Columns\TextColumn::make('name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email address')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('country')
-                    ->getStateUsing(fn ($record): ?string => Country::find($record->addresses->first()?->country)?->name ?? null),
+                Tables\Columns\IconColumn::make('featured')
+                    ->label('Featured')
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable()
                     ->sortable(),
@@ -123,8 +140,7 @@ class SellerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\AddressesRelationManager::class,
-            RelationManagers\PaymentsRelationManager::class,
+            RelationManagers\ProductRelationManager::class,
         ];
     }
 

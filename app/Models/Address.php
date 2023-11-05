@@ -13,6 +13,14 @@ class Address extends Model
 
     protected $table = 'addresses';
 
+    protected $fillable = [
+        'street',
+        'city',
+        'country',
+        'state',
+        'zip'
+    ];
+
     public function customers()
     {
         return $this->morphedByMany(Customer::class, 'addressable');
